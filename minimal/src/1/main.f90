@@ -15,8 +15,7 @@ PROGRAM QE_MINIMAL
 END PROGRAM QE_MINIMAL
 
 
-SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, &
-                            cosbc_, trd_ht, rd_ht, s_out )
+SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, cosbc_, s_out )
     !
     USE cell_base
     USE symm_base
@@ -24,12 +23,13 @@ SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, &
     !
     IMPLICIT NONE
     !
+    EXTERNAL :: dgetrf, dgetri, zgetrf, zgetri, DGEMV, DGER
+    !
     INTEGER, INTENT(IN) :: ibrav_
     !
     REAL(DP), INTENT(IN) :: celldm_ (6)
     !  traditional crystallographic cell parameters (alpha=cosbc and so on)
-    LOGICAL, INTENT(IN) :: trd_ht
-    REAL(DP), INTENT(IN) :: rd_ht (3,3)
+    REAL(DP) :: rd_ht (3,3)
     !
     !    CELL_PARAMETERS (cell_option)
     !      HT(1,1) HT(1,2) HT(1,3)
@@ -51,8 +51,10 @@ SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, &
     INTEGER, INTENT(OUT) :: s_out(3,3,48)
     !INTEGER :: i, j, k
 
+    rd_ht  = 0.0_DP
+
     CALL cell_base_init( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, &
-                         cosbc_, trd_ht, rd_ht, 'alat' )
+                         cosbc_, .false., rd_ht, 'alat' )
     CALL set_sym_bl()
 
     s_out = s + 0.0
@@ -69,14 +71,18 @@ SUBROUTINE errore(routine, msg, ierr)
     CHARACTER(*),    INTENT(in) :: routine, msg
     INTEGER,         INTENT(in) :: ierr
     !
-    WRITE( stdout, FMT = '(/,1X,78("*"))')
-    WRITE( stdout, FMT = '(5X,"from ",A," : error #",I10)' ) routine, ierr
-    WRITE( stdout, FMT = '(5X,A)' ) msg
-    WRITE( stdout, FMT = '(1X,78("*"),/)' )
-    !
-    STOP
-    !
-    RETURN
+    IF( ierr <= 0 ) THEN
+        RETURN
+    ELSE
+        WRITE( stdout, FMT = '(/,1X,78("*"))')
+        WRITE( stdout, FMT = '(5X,"from ",A," : error #",I10)' ) routine, ierr
+        WRITE( stdout, FMT = '(5X,A)' ) msg
+        WRITE( stdout, FMT = '(1X,78("*"),/)' )
+        !
+        STOP
+        !
+        RETURN
+    ENDIF
     !
 END SUBROUTINE errore
 !

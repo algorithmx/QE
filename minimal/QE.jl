@@ -1,5 +1,3 @@
-using Libdl
-
 global const man_nm = Dict(
 "A" => "The symbol's value is absolute, and will not be changed by further linking.",
 "B" => "The symbol is in the BSS data section.  This section typically contains zero-initialized or uninitialized data, although the exact behavior is system dependent.",
@@ -29,31 +27,38 @@ global const man_nm = Dict(
 "?" => "The symbol type is unknown, or object file format specific.",
 )
 
+##
+
+function content_lib_a(lib_a::String)
+        _content0 = readlines(`nm $lib_a`)
+        _content  = [split(l,' ',keepempty=false) for l in _content0]
+        @inline mkpr3(sss) = Symbol(sss[3]) => [sss[2] , Ptr{Nothing}(parse(Int,sss[1],base=16))]
+        @inline mkpr2(sss) = Symbol(sss[2]) => [sss[1] , Ptr{Nothing}(0)]
+        @inline mkpr(sss)  = length(sss)==3 ? mkpr3(sss) : mkpr2(sss)
+        _functions  = Dict(mkpr(l) for l in _content if length(l)>1)
+        return _functions
+end
+
+##
 
 global const __QE_LIB__ = "/home/dabajabaza/jianguoyun/Workspace/QE/minimal/lib/QE_minimal.so"
+QE_functions = content_lib_a(__QE_LIB__)
 
-QE_lib = dlopen(__QE_LIB__)
+##
 
-@inline mkpr(sss) = Symbol(sss[3]) => [sss[2] , ( dlsym(QE_lib, Symbol(sss[3]), throw_error=false), 
-                                                  Ptr{Nothing}(parse(Int,sss[1],base=16)) )]
-
-QE_content = readlines(`nm $__QE_LIB__`)
-
-QE_functions  = Dict(mkpr(split(l,' ',keepempty=false)) for l in QE_content if startswith(l,"0"))
-
-dlclose(QE_lib)
-
+include("pwx_input_file.jl")
 
 ss = zeros(Int32, 3,3,48)
-ibrav_ = 0
-celldm_ = zeros(Float64, 6)
-(a_, b_, c_, cosab_, cosac_, cosbc_) = (1.0, 1.0, 1.0, 0.0, 0.0, 0.0)
-trd_ht = false
-rd_ht = zeros(Float64, 3,3)
+(a_, b_, c_, cosab_, cosac_, cosbc_) = (1.2, 1.2, 1.2, 0.0, 0.0, 0.0)
+(alpha, beta, gamma) = (180acos(cosab_)/π, 180acos(cosac_)/π, 180acos(cosbc_)/π)
+ibrav_ = Find_ibrav(Int_Tables[221], Find_Lattice(a_,b_,c_,alpha,beta,gamma))
+celldm_ = celldm_array(ibrav_, (a_, b_, c_, acos(cosab_), acos(cosac_), acos(cosbc_)))
+println(celldm_)
+##
 
 ccall(  (:get_symm_base_s_,__QE_LIB__), 
         Cvoid, 
         (Ref{Int32}, Ref{Float64}, Ref{Float64},  Ref{Float64},  Ref{Float64},  Ref{Float64}, Ref{Float64}, Ref{Float64}, 
-        Ref{Bool}, Ref{Float64}, Ref{Int32} ), 
-        ibrav_,      celldm_,      a_,            b_,            c_,            cosab_,       cosac_,       cosbc_,       
-        trd_ht,      rd_ht,        ss )
+        Ref{Int32} ), 
+        ibrav_,      celldm_,      0.0,           0.0,           0.0,           0.0,          0.0,          0.0,       
+        ss  )

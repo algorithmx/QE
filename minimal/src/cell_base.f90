@@ -127,6 +127,7 @@
     REAL(DP), INTENT(IN) :: a_ , b_ , c_ , cosab_, cosac_, cosbc_
 
     REAL(DP) :: units
+    INTEGER  :: j
     !
     IF ( ibrav_ == 0 .and. .not. trd_ht ) THEN
        CALL errore('cell_base_init', 'ibrav=0: must read cell parameters', 1)
@@ -236,6 +237,16 @@
   tpiba  = 2.0_DP * pi / alat
   tpiba2 = tpiba * tpiba
   init_tpiba2 = tpiba2 ! BS : this is used in CPV/src/init_run.f90 
+
+  !  WRITE( stdout, 1210 )
+  !  WRITE( stdout, 1220 ) ( at( 1, j ), j = 1, 3 )
+  !  WRITE( stdout, 1220 ) ( at( 2, j ), j = 1, 3 )
+  !  WRITE( stdout, 1220 ) ( at( 3, j ), j = 1, 3 )
+  !  WRITE( stdout, 1221 ) ( alat )
+!1210   format(3X,'<<<DEBUG>>>')
+!1220   format(3X,3F14.8)
+!1221   format(3F14.8)
+  !
   RETURN
   !
   END SUBROUTINE cell_base_init

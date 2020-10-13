@@ -24,7 +24,7 @@ echo "|----------------------  copying files  ...  -----------------"
 
 # please change folder name
 cd ~/abinitio/qe-6.6/Modules/
-cp atomic_wfc_mod.f90    invmat.f90     output_tau.f90        start_k.f90 \
+cp atomic_wfc_mod.f90  output_tau.f90        start_k.f90 \
 cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
@@ -36,7 +36,7 @@ mp_images.f90  sort.f90 \
 
 # please change folder name
 cd ~/abinitio/qe-6.6/UtilXlib/
-cp atomic_wfc_mod.f90    invmat.f90     output_tau.f90        start_k.f90 \
+cp atomic_wfc_mod.f90    output_tau.f90        start_k.f90 \
 cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
@@ -48,7 +48,7 @@ mp_images.f90  sort.f90 \
 
 # please change folder name
 cd ~/abinitio/qe-6.6/PW/src/
-cp atomic_wfc_mod.f90    invmat.f90     output_tau.f90        start_k.f90 \
+cp atomic_wfc_mod.f90    output_tau.f90        start_k.f90 \
 cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
@@ -64,10 +64,10 @@ cd ~/jianguoyun/Workspace/QE/minimal/src/
 echo "|----------------------  compile -----------------------------"
 
 GFORT=$(mpif90 -showme)
-alias fffc="${GFORT} -std=f2003 -cpp -shared -fPIC -c -O3"
+alias fffc="${GFORT} -std=f2003 -cpp -shared -fPIC -O3 -L/usr/local/lib/ -lblas -llapack -c"
 shopt -s expand_aliases
 
-fffc  parallel_include.f90
+fffc parallel_include.f90
 fffc util_param.f90
 fffc mp.f90
 
@@ -95,7 +95,7 @@ fffc symm_base.f90
 fffc ions_base.f90
 fffc output_tau.f90
 
-${GFORT} -std=f2003 -cpp -shared -fPIC -O3  *.o  ./1/main.f90  -o  QE_minimal.so
+${GFORT} -std=f2003 -cpp -shared -fPIC -O3  *.o  volume.f90 recips.f90 ./1/main.f90  -L/usr/local/lib/ -lblas -llapack  -o  QE_minimal.so
 
 echo "|----------------------  finalize ----------------------------"
 mv QE_minimal.so ../lib/
