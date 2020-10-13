@@ -10,7 +10,6 @@ include("fortran_util.jl")
 
 include("QE.jl")
 
-cryst_to_cart( nks, xk, bg, iflag ) = ccall((:cryst_to_cart_,__QE_LIB__), , (Ref{Int64}, Ref{Float64}, Ref{Float64}, Ref{Int64})) 
 
 
 function errore( calling_routine, message, ierr )
@@ -29,19 +28,17 @@ end
 
 function kpoint_grid( 
     KPSETTING::Tuple,
-    nrot, 
+    nrot,               # number of bravais lattice symmetries
     s, 
     t_rev, 
     bg,
-    npk::Int;
+    npk::Int;           # max number of k-points
     time_reversal = true
     )
+
     (k1, k2, k3, nk1, nk2, nk3) = KPSETTING
     nkr = nk1*nk2*nk3
     
-    #!! number of k points
-    #INTEGER,  INTENT(out) :: nks
-
     #!! coordinates of k points
     #REAL(DP), INTENT(out) :: xk(3,npk)
     xk = zeros(Float64, 3, npk)
@@ -56,6 +53,7 @@ function kpoint_grid(
     #!!  xkg are the components of the complete grid in crystal axis  #N[70]
     #allocate (xkg( 3,nkr),wkk(nkr))  #N[62]
     wkk = ones(Float64,nkr)
+    xkg = ones(Float64,3,nkr)
 
     # REAL(DP) :: xkr(3), fact, xx, yy, zz #N[54]
     xkr = [0.0, 0.0, 0.0]
@@ -88,7 +86,7 @@ function kpoint_grid(
             ##  check both k and -k
             for ns = 1 : nrot
                 for i = 1 : 3
-                    xkr[i] = s[i,1,n] * xkg[1,nk] + s[i,2,n] * xkg[2,nk] + s[i,3,n] * xkg[3,nk]
+                    xkr[i] = s[i,1,ns] * xkg[1,nk] + s[i,2,ns] * xkg[2,nk] + s[i,3,ns] * xkg[3,nk]
                     xkr[i] = xkr[i] - nint(xkr[i])
                 end
                 if (t_rev[ns] == 1) xkr = -xkr end

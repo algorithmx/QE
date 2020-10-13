@@ -16,7 +16,7 @@ PROGRAM QE_MINIMAL
 END PROGRAM QE_MINIMAL
 
 
-SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, cosbc_, s_out )
+SUBROUTINE get_symm_base_s( ibrav_, celldm_, s_out )
     !
     USE cell_base
     USE symm_base
@@ -24,13 +24,11 @@ SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, cosbc_,
     !
     IMPLICIT NONE
     !
-    EXTERNAL :: dgetrf, dgetri, zgetrf, zgetri, DGEMV, DGER
-    !
     INTEGER, INTENT(IN) :: ibrav_
     !
     REAL(DP), INTENT(IN) :: celldm_ (6)
     !  traditional crystallographic cell parameters (alpha=cosbc and so on)
-    REAL(DP) :: rd_ht (3,3)
+    REAL(DP) :: rd_ht (3,3)  = 0.0_DP
     !
     !    CELL_PARAMETERS (cell_option)
     !      HT(1,1) HT(1,2) HT(1,3)
@@ -47,15 +45,9 @@ SUBROUTINE get_symm_base_s( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, cosbc_,
     !      trd_ht = .true.
     !      tcell  = .true.
     !
-    REAL(DP), INTENT(IN) :: a_ , b_ , c_ , cosab_, cosac_, cosbc_
-    !
     INTEGER, INTENT(OUT) :: s_out(3,3,48)
-    !INTEGER :: i, j, k
 
-    rd_ht  = 0.0_DP
-
-    CALL cell_base_init( ibrav_, celldm_, a_, b_, c_, cosab_, cosac_, &
-                         cosbc_, .false., rd_ht, 'alat' )
+    CALL cell_base_init( ibrav_, celldm_, 0.0_DP, 0.0_DP, 0.0_DP, 0.0_DP, 0.0_DP, 0.0_DP, .false., rd_ht, 'alat' )
     CALL set_sym_bl()
 
     s_out = s + 0.0

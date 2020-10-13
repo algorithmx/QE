@@ -46,6 +46,7 @@ QE_functions = content_lib_a(__QE_LIB__)
 
 ##
 
+#=
 include("pwx_input_file.jl")
 
 ss = zeros(Int32, 3,3,48)
@@ -58,9 +59,29 @@ celldm_ = celldm_array(ibrav_, (a_, b_, c_, acos(cosab_), acos(cosac_), acos(cos
 
 ccall(  (:get_symm_base_s_,__QE_LIB__), 
         Cvoid, 
-        (Ref{Int32}, Ref{Float64}, Ref{Float64},  Ref{Float64},  Ref{Float64},  Ref{Float64}, Ref{Float64}, Ref{Float64}, 
-        Ref{Int32} ), 
-        ibrav_,      celldm_,      0.0,           0.0,           0.0,           0.0,          0.0,          0.0,       
-        ss  )
+        (Ref{Int32}, Ref{Float64}, Ref{Int32}),
+        ibrav_,      celldm_,      ss  )
 
 println(ss)
+=#
+
+##
+# wrap up
+# nvec:  number of vectors (atomic positions or k-points)
+#        to be transformed from crystal to cartesian and vice versa
+# iflag: gives the direction of the transformation
+#
+# trmat: transformation matrix
+# if iflag=1:
+#    trmat = at ,  basis of the real-space lattice,       for atoms   or
+#          = bg ,  basis of the reciprocal-space lattice, for k-points
+# if iflag=-1: the opposite
+cryst_to_cart(nvec, vec, trmat, iflag) = ccall((:cryst_to_cart_, __QE_LIB__), 
+                                               Cvoid,
+                                               (Ref{Int32},  Ref{Float64}, Ref{Float64}, Ref{Int32}),
+                                                Int32(nvec), vec,          trmat,        Int32(iflag) )
+
+cryst_to_cart1(nvec, vec, trmat, iflag) = (iflag==1 ? (vec[:,1:nvec] = trmat  * vec[:,1:nvec]; nothing) 
+                                                    : (vec[:,1:nvec] = trmat' * vec[:,1:nvec]; nothing))
+
+
