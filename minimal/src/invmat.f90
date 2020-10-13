@@ -26,10 +26,8 @@ MODULE matrix_inversion
   ! it also returns the determinant in "da"
   !
   USE kinds, ONLY : DP
-  !
+
   IMPLICIT NONE
-  EXTERNAL :: dgetrf, dgetri, zgetrf, zgetri, DGEMV, DGER
-  !
   INTEGER, INTENT(in) :: n
   REAL(DP), DIMENSION (n,n), INTENT(inout)  :: a
   REAL(DP), DIMENSION (n,n), INTENT(out), OPTIONAL :: a_inv
@@ -83,10 +81,7 @@ MODULE matrix_inversion
   ! as invmat_r, for a complex matrix
   !
   USE kinds, ONLY : DP
-  !
   IMPLICIT NONE
-  EXTERNAL :: dgetrf, dgetri, zgetrf, zgetri, DGEMV, DGER
-  !
   INTEGER, INTENT(IN) :: n
   COMPLEX (DP), DIMENSION (n,n), INTENT(INOUT)  :: a
   COMPLEX (DP), OPTIONAL, DIMENSION (n,n), INTENT(OUT) :: a_inv

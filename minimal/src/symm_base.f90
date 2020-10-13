@@ -14,7 +14,7 @@ MODULE symm_base
   !
   USE kinds,      ONLY : DP
   USE io_global,  ONLY : stdout
-  USE cell_base,  ONLY : at, bg, alat
+  USE cell_base,  ONLY : at, bg
   !
   ! ... these are acceptance criteria
   !
@@ -147,7 +147,7 @@ CONTAINS
      ! rat: the rotated of a direct vector ( cartesian )
      ! rot: the rotated of a direct vector ( crystal axis )
      ! value: component of the s matrix in axis basis
-     INTEGER :: jpol, kpol, mpol, irot, imat(32), j
+     INTEGER :: jpol, kpol, mpol, irot, imat(32)
      ! counters over the polarizations and the rotations
      !
      CHARACTER(LEN=45) :: s0name(64)
@@ -260,17 +260,7 @@ CONTAINS
         ENDDO
      ENDDO
      !
-     CALL infomsg( 'set_sym_bl', '<<<DEBUG>>>' )
-     WRITE( stdout, 1210 )
-     WRITE( stdout, 1220 ) ( rot( 1, j ), j = 1, 3 )
-     WRITE( stdout, 1220 ) ( rot( 2, j ), j = 1, 3 )
-     WRITE( stdout, 1220 ) ( rot( 3, j ), j = 1, 3 )
-     WRITE( stdout, 1221 ) ( alat )
-1210   format(3X,'<<<DEBUG>>>')
-1220   format(3X,3F14.8)
-1221   format(3F14.8)
      ! ... then its inverse (rot is used as work space)
-     CALL infomsg( 'set_sym_bl', 'CALL invmat' )
      CALL invmat( 3, rot, overlap )
      !
      nrot = 1

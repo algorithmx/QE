@@ -53,7 +53,7 @@ ss = zeros(Int32, 3,3,48)
 (alpha, beta, gamma) = (180acos(cosab_)/π, 180acos(cosac_)/π, 180acos(cosbc_)/π)
 ibrav_ = Find_ibrav(Int_Tables[221], Find_Lattice(a_,b_,c_,alpha,beta,gamma))
 celldm_ = celldm_array(ibrav_, (a_, b_, c_, acos(cosab_), acos(cosac_), acos(cosbc_)))
-println(celldm_)
+
 ##
 
 ccall(  (:get_symm_base_s_,__QE_LIB__), 
@@ -62,3 +62,5 @@ ccall(  (:get_symm_base_s_,__QE_LIB__),
         Ref{Int32} ), 
         ibrav_,      celldm_,      0.0,           0.0,           0.0,           0.0,          0.0,          0.0,       
         ss  )
+
+println(ss)

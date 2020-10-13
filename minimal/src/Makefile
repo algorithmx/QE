@@ -29,9 +29,9 @@ cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
 control_flags.f90     latgen.f90     random_numbers.f90    volume.f90 \
-cryst_to_car.f90      wannier_new.f90 \
+cryst_to_car.f90      wannier_new.f90  error_handler.f90 \
 mp.f90         recips.f90            wypos.f90 \
-mp_images.f90  sort.f90 \
+mp_images.f90  sort.f90 			 invmat.f90 \
 ~/jianguoyun/Workspace/QE/minimal/src/ > /dev/null 2>&1
 
 # please change folder name
@@ -41,9 +41,9 @@ cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
 control_flags.f90     latgen.f90     random_numbers.f90    volume.f90 \
-cryst_to_car.f90      wannier_new.f90 \
+cryst_to_car.f90      wannier_new.f90  error_handler.f90 \
 mp.f90         recips.f90            wypos.f90 \
-mp_images.f90  sort.f90 \
+mp_images.f90  sort.f90 			 invmat.f90 \
 ~/jianguoyun/Workspace/QE/minimal/src/ > /dev/null 2>&1
 
 # please change folder name
@@ -53,9 +53,9 @@ cell_base.f90         io_global.f90  parallel_include.f90  symm_base.f90 \
 cellmd.f90            ions_base.f90  parameters.f90        symmetrize_at.f90 \
 constants.f90         kind.f90       parser.f90            util_param.f90 \
 control_flags.f90     latgen.f90     random_numbers.f90    volume.f90 \
-cryst_to_car.f90      wannier_new.f90 \
+cryst_to_car.f90      wannier_new.f90  error_handler.f90 \
 mp.f90         recips.f90            wypos.f90 \
-mp_images.f90  sort.f90 \
+mp_images.f90  sort.f90 			 invmat.f90 \
 ~/jianguoyun/Workspace/QE/minimal/src/ > /dev/null 2>&1
 
 # please change folder name
@@ -70,6 +70,7 @@ shopt -s expand_aliases
 fffc parallel_include.f90
 fffc util_param.f90
 fffc mp.f90
+fffc error_handler.f90
 
 fffc kind.f90
 fffc io_global.f90
