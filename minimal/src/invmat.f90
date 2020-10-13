@@ -26,7 +26,6 @@ MODULE matrix_inversion
   ! it also returns the determinant in "da"
   !
   USE kinds, ONLY : DP
-  USE ERR,   ONLY : errore
 
   IMPLICIT NONE
   INTEGER, INTENT(in) :: n

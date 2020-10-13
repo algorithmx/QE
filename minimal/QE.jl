@@ -45,5 +45,15 @@ dlclose(QE_lib)
 
 
 ss = zeros(Int32, 3,3,48)
+ibrav_ = 0
+celldm_ = zeros(Float64, 6)
+(a_, b_, c_, cosab_, cosac_, cosbc_) = (1.0, 1.0, 1.0, 0.0, 0.0, 0.0)
+trd_ht = false
+rd_ht = zeros(Float64, 3,3)
 
-ccall((:get_symm_base_s_,__QE_LIB__), Cint, (Ref{Int32},), ss)
+ccall(  (:get_symm_base_s_,__QE_LIB__), 
+        Cvoid, 
+        (Ref{Int32}, Ref{Float64}, Ref{Float64},  Ref{Float64},  Ref{Float64},  Ref{Float64}, Ref{Float64}, Ref{Float64}, 
+        Ref{Bool}, Ref{Float64}, Ref{Int32} ), 
+        ibrav_,      celldm_,      a_,            b_,            c_,            cosab_,       cosac_,       cosbc_,       
+        trd_ht,      rd_ht,        ss )

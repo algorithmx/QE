@@ -62,6 +62,7 @@ mp_images.f90  sort.f90 \
 cd ~/jianguoyun/Workspace/QE/minimal/src/
 
 echo "|----------------------  compile -----------------------------"
+
 GFORT=$(mpif90 -showme)
 alias fffc="${GFORT} -std=f2003 -cpp -shared -fPIC -c -O3"
 shopt -s expand_aliases
@@ -79,7 +80,6 @@ fffc parser.f90
 
 fffc constants.f90
 fffc sort.f90
-fffc ./1/errore_yunlong.f90
 fffc cryst_to_car.f90
 fffc atomic_wfc_mod.f90
 fffc control_flags.f90
@@ -96,3 +96,6 @@ fffc ions_base.f90
 fffc output_tau.f90
 
 ${GFORT} -std=f2003 -cpp -shared -fPIC -O3  *.o  ./1/main.f90  -o  QE_minimal.so
+
+echo "|----------------------  finalize ----------------------------"
+mv QE_minimal.so ../lib/
